@@ -3,7 +3,6 @@ import tensorflow as tf
 import pandas as pd
 import os
 import pathlib
-import holitest as hlt
 # import s_arima_mod as sam
 import tensorflow.contrib.eager as tfe
 from tensorflow.contrib import rnn
