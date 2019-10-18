@@ -149,7 +149,7 @@ def normdist(x,mu,sigma):
 
 
 eval_data_set_kari = pd.read_csv(input_data_path)
-eval_data_set = eval_data_set_kari(['date_time', 'time_diff'])
+eval_data_set = eval_data_set_kari([['date_time'], ['time_diff']])
 eval_data_set = eval_data_set.set_index(['date_time'])
 eval_data_set_inst = TimeSeriesDataSet(eval_data_set)
 eval_series_length = eval_data_set_inst.series_length
