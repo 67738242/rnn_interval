@@ -34,7 +34,7 @@ learning_data_day_len = 60
 input_digits = 500
 output_digits = 20
 n_hidden = 40
-epochs = 150
+epochs = 1000
 eary_stop_epoch = 150
 batch_size = 30
 attention_layer_size = 10
@@ -465,7 +465,7 @@ fc_input_std = fc_input.std(axis=1, keepdims=True)
 
 fc_output = std_output * fc_input_std + fc_input_mean
 fc_seq = fc_output.reshape(-2)
-# print(fc_seq)
+print('forecasting', fc_seq)
 rnn_np_p_data_sr = np.append(rnn_np_p_data_sr, fc_seq.reshape(-1), axis = 0)
 
 dataframe_2_ = eval_data_set[(learning_data_day_len + k) * 24: \
