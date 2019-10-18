@@ -474,8 +474,8 @@ dataframe_2_ = eval_data_set[(learning_data_day_len + k) * 24: \
 day_d = dataframe_2_.values.reshape(-1)
 # print(day_d)
 
-if len(day_d) != 24:
-    break
+# if len(day_d) != 24:
+#     break
 
 # series_error.append(fc_seq - day_d)
 # print(series_error)
