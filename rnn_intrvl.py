@@ -291,17 +291,26 @@ def inference(x, y, n_batch, is_training,
                 tf.get_variable_scope().reuse_variables()
                 # tf.get_variable_scope().reuse_variables()
 
+
             if is_training is True:
-                cell_input_bin = np.randam.choice([1, 0],p=[tchr_frcng_thr, 1 - tchr_frcng_thr])
-
-                if cell_input_bin==1:
-                    cell_input = batch_normalization(output_digits, y)[:, t-1, :]
-
-                elif t == 1:
-                    cell_input = tf.matmul(decoder_1_outputs[-1], V_hid_1) + c_hid_1
-
-                else:
-                    cell_input = output_1
+                elems = tf.convert_to_tensor([1, 0])
+                samples = tf.multinomial(tf.log([[tchr_frcng_thr, 1 - tchr_frcng_thr]]), 1) # note log-prob
+                cell_input_bin = elems[tf.cast(samples[0][0], tf.int32)]
+                # bool = tf.equal(cell_input_bin, 1)
+                t_const = tf.const(t)
+                cell_input = tf.case({tf.equal(cell_input_bin, 1): lambda a: return batch_normalization(output_digits, y)[:, t-1, :],
+                        tf.equal(t_const, 1): lambda a: return tf.matmul(decoder_1_outputs[-1], V_hid_1) + c_hid_1},
+                    default=lambda a: return output_1)
+                # cell_input_bin = np.randam.choice([1, 0],p=[tchr_frcng_thr, 1 - tchr_frcng_thr])
+                #
+                # if cell_input_bin==1:
+                #     cell_input = batch_normalization(output_digits, y)[:, t-1, :]
+                #
+                # elif t == 1:
+                #     cell_input = tf.matmul(decoder_1_outputs[-1], V_hid_1) + c_hid_1
+                #
+                # else:
+                #     cell_input = output_1
 
                 (output_1, state_1) = decoder_1(cell_input, state_1)
                 # (output_2, state_2) = decoder_2(batch_normalization(output_digits, y)[:, t-1, :], state_2)
