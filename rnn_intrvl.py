@@ -350,7 +350,9 @@ def inference(x, y, n_batch, is_training,
 def loss(y, t):
     with tf.name_scope('loss'):
         # mse = tf.reduce_mean(tf.square(y - t), axis = [1, 0])
-        loss= tf.reduce_mean(1 - tf.contrib.distributions.Normal(0, 1).pdf(tf.cast(y-t, tf.int32)), [1, 0])
+        norm = tf.contrib.distributions.Normal(0, 1)
+        pdf = norm.pdf(tf.cast(y-t, tf.int32))
+        loss= tf.reduce_mean(1 - pdf, [1, 0])
         # mse = tf.reduce_mean(tf.square(y - t), [1, 0])
         return loss
 
