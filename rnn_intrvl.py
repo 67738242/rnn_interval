@@ -352,7 +352,7 @@ def loss(y, t):
         # mse = tf.reduce_mean(tf.square(y - t), axis = [1, 0])
         norm = tf.contrib.distributions.Normal(0., 1.)
         error = y-t
-        pdf = norm.prob(tf.cast(error, tf.int32))
+        pdf = norm.prob(error)
         loss= tf.reduce_mean(1 - pdf, [1, 0])
         # mse = tf.reduce_mean(tf.square(y - t), [1, 0])
         return loss
