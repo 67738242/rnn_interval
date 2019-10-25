@@ -284,6 +284,8 @@ def inference(x, y, n_batch, is_training,
     #                                 initial_state=state,
     #                                 )
 
+    elems = tf.convert_to_tensor([1, 0])
+    samples = tf.multinomial(tf.log([[tchr_frcng_thr, 1 - tchr_frcng_thr]]), 1) # note log-prob
 
     with tf.variable_scope('Decoder'):
         for t in range(1, output_digits):
@@ -293,8 +295,6 @@ def inference(x, y, n_batch, is_training,
 
 
             if is_training is True:
-                elems = tf.convert_to_tensor([1, 0])
-                samples = tf.multinomial(tf.log([[tchr_frcng_thr, 1 - tchr_frcng_thr]]), 1) # note log-prob
                 cell_input_bin = elems[tf.cast(samples[0][0], tf.int32)]
                 # bool = tf.equal(cell_input_bin, 1)
                 t_const = tf.const(t)
