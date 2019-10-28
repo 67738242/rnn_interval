@@ -30,9 +30,9 @@ from sklearn.model_selection import train_test_split
 
 learning_rate = 0.01
 # when attention,learning_rate must be 0.001
-learning_data_day_len = 20
-input_digits = 100
-output_digits = 20
+learning_data_day_len = 100
+input_digits = 5000
+output_digits = 100
 n_hidden = 40
 epochs = 1000
 eary_stop_epoch = 150
@@ -408,7 +408,7 @@ for epoch in range(epochs):
     X_, Y_ = shuffle(input_data_train, true_data_train)
 
     with tf.name_scope('train'):
-        for h in range(n_batches):
+        for h in range(100):
             start = h * batch_size
             end = start + batch_size
             # print('begin learning')
