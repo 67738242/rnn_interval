@@ -214,7 +214,7 @@ def inference(x, y, n_batch, is_training,
         )
 
     encoder_states_fw = tf.slice(encoder_states, [0, 0, 0, 0], [1, 1, n_batch, n_hidden])
-    encoder_states_fw = tf.reshape(encoder_states_fw, [1, n_batch, n_hidden])
+    encoder_states_fw = tf.reshape(encoder_states_fw, [n_batch, n_hidden])
     # encoder_forward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
     # encoder_backward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
     # encoder_outputs = []
