@@ -430,6 +430,8 @@ for epoch in range(epochs):
         for h in range(100):
             start = h * batch_size
             end = start + batch_size
+            print(np.shape(X_[start:end]))
+
             # print('begin learning')
             # print(y)
             # t = Y_[start:end]
@@ -441,7 +443,6 @@ for epoch in range(epochs):
             #
             # train_step(loss, learning_rate)
             sess.run(train_step, feed_dict={
-                print(np.shape(X_[start:end]))
                 x: X_[start:end],
                 t: Y_[start:end],
                 n_batch: batch_size,
