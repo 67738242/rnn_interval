@@ -31,7 +31,7 @@ from sklearn.model_selection import train_test_split
 learning_rate = 0.01
 # when attention,learning_rate must be 0.001
 learning_data_day_len = 50
-input_digits = 20
+input_digits = 100
 output_digits = 20
 n_hidden = 40
 epochs = 1000
@@ -204,7 +204,7 @@ def inference(x, y, n_batch, is_training,
         dtype=tf.float32)
 
         # state = encoder._zero_state(n_batches)
-    print('batchnom', tf.shape(batch_normalization(input_digits, x)))
+    # print('batchnom', tf.shape(batch_normalization(input_digits, x)))
 
         # [input_digits, n_batch, 1], [1, n_batch, n_hidden]
     encoder_outputs, encoder_states = \
