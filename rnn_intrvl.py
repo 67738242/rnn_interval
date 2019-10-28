@@ -408,7 +408,7 @@ for epoch in range(epochs):
     X_, Y_ = shuffle(input_data_train, true_data_train)
 
     with tf.name_scope('train'):
-        for h in range(100):
+        for h in range(n_batches):
             start = h * batch_size
             end = start + batch_size
             # print('begin learning')
