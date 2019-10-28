@@ -196,33 +196,51 @@ def inference(x, y, n_batch, is_training,
             # print(nom_batch[0], len(nom_batch[0]))
             return nom_batch
 
-    encoder_forward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
-    encoder_backward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
-    encoder_outputs = []
-    encoder_states = []
+    encoder = cudnn_rnn.CudnnGRU(
+        num_layers=1,
+        num_units=int(n_hidden),
+        input_mode='auto_select',
+        direction='bidirectional',
+        dtype=tf.float32)
 
-    # size = [batch_size][input_digits][input_len]
-    x = tf.transpose(batch_normalization(input_digits, x), [1, 0, 2])
-    x = tf.reshape(x, [-1, n_in])
-    x = tf.split(x, input_digits, 0)
-    # Encode
+        # state = encoder._zero_state(n_batches)
 
-    # state = encoder.zero_state(n_batch, tf.float32)
-
-    # with tf.variable_scope('Encoder'):
-    #     for t in range(input_digits):
-    #         if t > 0:
-    #             tf.get_variable_scope().reuse_variables()
-    #         (output, state) = encoder(batch_normalization(input_digits, x)[:, t, :], state)
-    #         encoder_outputs.append(output)
-    #         encoder_states.append(state)
-
-    encoder_outputs, encoder_states_fw, encoder_states_bw = tf.nn.static_bidirectional_rnn(
-        encoder_forward,
-        encoder_backward,
-        x,
-        dtype=tf.float32
+        # [input_digits, n_batch, 1], [1, n_batch, n_hidden]
+    encoder_outputs, encoder_states = \
+        encoder(tf.reshape(batch_normalization(input_digits, x), \
+                [input_digits, n_batch, n_in]),
+            # initial_state = state,
+            training = True
         )
+
+    encoder_states_fw = tf.slice(encoder_states, [0, 0, 0], [1, n_batch, n_hidden])
+    # encoder_forward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
+    # encoder_backward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
+    # encoder_outputs = []
+    # encoder_states = []
+    #
+    # # size = [batch_size][input_digits][input_len]
+    # x = tf.transpose(batch_normalization(input_digits, x), [1, 0, 2])
+    # x = tf.reshape(x, [-1, n_in])
+    # x = tf.split(x, input_digits, 0)
+    # # Encode
+    #
+    # # state = encoder.zero_state(n_batch, tf.float32)
+    #
+    # # with tf.variable_scope('Encoder'):
+    # #     for t in range(input_digits):
+    # #         if t > 0:
+    # #             tf.get_variable_scope().reuse_variables()
+    # #         (output, state) = encoder(batch_normalization(input_digits, x)[:, t, :], state)
+    # #         encoder_outputs.append(output)
+    # #         encoder_states.append(state)
+    #
+    # encoder_outputs, encoder_states_fw, encoder_states_bw = tf.nn.static_bidirectional_rnn(
+    #     encoder_forward,
+    #     encoder_backward,
+    #     x,
+    #     dtype=tf.float32
+    #     )
     # encoder_outputs size = [time][batch][cell_fw.output_size + cell_bw.output_size]
     # encoder_states_fw, encoder_states_bw is final state
     # Decode
