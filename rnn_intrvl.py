@@ -425,7 +425,7 @@ early_stopping = Early_Stopping(patience=10, verbose=1)
 # print(len(input_data_train[0]))
 for epoch in range(epochs):
     X_, Y_ = shuffle(input_data_train, true_data_train)
-
+    print(np.shape(X_))
     with tf.name_scope('train'):
         for h in range(100):
             start = h * batch_size
