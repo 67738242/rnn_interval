@@ -30,8 +30,8 @@ from sklearn.model_selection import train_test_split
 
 learning_rate = 0.01
 # when attention,learning_rate must be 0.001
-learning_data_day_len = 100
-input_digits = 5000
+learning_data_day_len = 50
+input_digits = 1000
 output_digits = 100
 n_hidden = 40
 epochs = 1000
