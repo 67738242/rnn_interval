@@ -36,7 +36,7 @@ output_digits = 100
 n_hidden = 40
 epochs = 1000
 eary_stop_epoch = 150
-batch_size = 30
+batch_size = 100
 attention_layer_size = 10
 num_units = 50
 ample = 0
@@ -332,7 +332,7 @@ def inference(x, y, n_batch, is_training,
                 # else:
                 #     cell_input = output_1
 
-                    (output_1, state_1) = decoder_1(batch_normalization(output_digits, y)[:, t-1, :], state_1)
+                (output_1, state_1) = decoder_1(batch_normalization(output_digits, y)[:, t-1, :], state_1)
                 # (output_2, state_2) = decoder_2(batch_normalization(output_digits, y)[:, t-1, :], state_2)
             else:
                 # 直前の出力を求める
