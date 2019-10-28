@@ -430,7 +430,7 @@ for epoch in range(epochs):
         for h in range(n_batches):
             start = h * batch_size
             end = start + batch_size
-            print(np.shape(X_[start:end]))
+            # print(np.shape(X_[start:end]))
 
             # print('begin learning')
             # print(y)
