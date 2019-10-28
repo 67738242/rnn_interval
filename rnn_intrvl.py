@@ -204,6 +204,7 @@ def inference(x, y, n_batch, is_training,
         dtype=tf.float32)
 
         # state = encoder._zero_state(n_batches)
+    print('batchnom', tf.shape(batch_normalization(input_digits, x)))
 
         # [input_digits, n_batch, 1], [1, n_batch, n_hidden]
     encoder_outputs, encoder_states = \
@@ -425,7 +426,6 @@ early_stopping = Early_Stopping(patience=10, verbose=1)
 # print(len(input_data_train[0]))
 for epoch in range(epochs):
     X_, Y_ = shuffle(input_data_train, true_data_train)
-    print(np.shape(X_))
     with tf.name_scope('train'):
         for h in range(100):
             start = h * batch_size
@@ -441,6 +441,7 @@ for epoch in range(epochs):
             #
             # train_step(loss, learning_rate)
             sess.run(train_step, feed_dict={
+                print(np.shape(X_[start:end]))
                 x: X_[start:end],
                 t: Y_[start:end],
                 n_batch: batch_size,
