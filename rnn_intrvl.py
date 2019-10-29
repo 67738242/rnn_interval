@@ -28,13 +28,13 @@ from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 #start = time.time()
 
-learning_rate = 0.01
+learning_rate = 0.001
 # when attention,learning_rate must be 0.001
 learning_data_day_len = 5
 input_digits = 200
 output_digits = 100
 n_hidden = 400
-epochs = 1000
+epochs = 100
 eary_stop_epoch = 150
 batch_size = 10
 attention_layer_size = 50
