@@ -53,9 +53,10 @@ input_data_path='/tmp/rnn_input/log_time.csv'
 path_output_data='/tmp/rnn_output/'
 # path_fig = '/tmp/RNN_python/figures_seq2seq_test/'
 # path_output_data = '/tmp/RNN_python/schd_sam_output_data/'
-# LOG_DIR = '/tmp/RNN_python/rnn_log'
+LOG_DIR = '/tmp/rnn_log'
 
 os.makedirs(path_output_data, exist_ok=True)
+os.makedirs(LOG_DIR, exist_ok=True)
 
 class TimeSeriesDataSet:
 #時系列データの時間の設定
@@ -408,7 +409,7 @@ with tf.name_scope('initial'):
     sess = tf.Session()
     # sess = tf_debug.LocalCLIDebugWrapperSession(sess)
     # sess = tf_debug.TensorBoardDebugWrapperSession(sess, 'localhost:6064')
-    if k == 0:
+    if k == 1:
         tf.summary.FileWriter(LOG_DIR, sess.graph)
     sess.run(init)
 
