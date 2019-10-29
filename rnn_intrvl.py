@@ -374,7 +374,7 @@ def loss(y, t):
         norm = tf.contrib.distributions.Normal(0., 0.5)
         error = y-t
         pdf = norm.prob(error)
-        loss　= tf.reduce_mean(1 - pdf, [1, 0])
+        loss = tf.reduce_mean(1 - pdf, [1, 0])
         return loss
 
 def training(loss, learning_rate):
