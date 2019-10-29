@@ -30,15 +30,15 @@ from sklearn.model_selection import train_test_split
 
 learning_rate = 0.01
 # when attention,learning_rate must be 0.001
-learning_data_day_len = 10
+learning_data_day_len = 5
 input_digits = 200
 output_digits = 100
-n_hidden = 40
+n_hidden = 400
 epochs = 1000
 eary_stop_epoch = 150
 batch_size = 10
-attention_layer_size = 5
-num_units = 5
+attention_layer_size = 50
+num_units = 50
 ample = 0
 # day = 'Tue'
 # learning_length = 700
@@ -222,38 +222,38 @@ def inference(x, y, n_batch, is_training,
 
     ####
 
-    encoder_forward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
-    encoder_backward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
-    encoder_outputs = []
-    encoder_states = []
+    with tf.variable_scope('encoder'):
+        encoder_forward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
+        encoder_backward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
+        encoder_outputs = []
+        encoder_states = []
 
-    # size = [batch_size][input_digits][input_len]
-    x = tf.transpose(batch_normalization(input_digits, x), [1, 0, 2])
-    x = tf.reshape(x, [-1, n_in])
-    x = tf.split(x, input_digits, 0)
-    # Encode
+        # size = [batch_size][input_digits][input_len]
+        x = tf.transpose(batch_normalization(input_digits, x), [1, 0, 2])
+        x = tf.reshape(x, [-1, n_in])
+        x = tf.split(x, input_digits, 0)
+        # Encode
 
-    # state = encoder.zero_state(n_batch, tf.float32)
+        # state = encoder.zero_state(n_batch, tf.float32)
 
-    # with tf.variable_scope('Encoder'):
-    #     for t in range(input_digits):
-    #         if t > 0:
-    #             tf.get_variable_scope().reuse_variables()
-    #         (output, state) = encoder(batch_normalization(input_digits, x)[:, t, :], state)
-    #         encoder_outputs.append(output)
-    #         encoder_states.append(state)
+        # with tf.variable_scope('Encoder'):
+        #     for t in range(input_digits):
+        #         if t > 0:
+        #             tf.get_variable_scope().reuse_variables()
+        #         (output, state) = encoder(batch_normalization(input_digits, x)[:, t, :], state)
+        #         encoder_outputs.append(output)
+        #         encoder_states.append(state)
 
-    encoder_outputs, encoder_states_fw, encoder_states_bw = tf.nn.static_bidirectional_rnn(
-        encoder_forward,
-        encoder_backward,
-        x,
-        dtype=tf.float32
-        )
-    # encoder_outputs size = [time][batch][cell_fw.output_size + cell_bw.output_size]
-    # encoder_states_fw, encoder_states_bw is final state
+        encoder_outputs, encoder_states_fw, encoder_states_bw = tf.nn.static_bidirectional_rnn(
+            encoder_forward,
+            encoder_backward,
+            x,
+            dtype=tf.float32
+            )
+        # encoder_outputs size = [time][batch][cell_fw.output_size + cell_bw.output_size]
+        # encoder_states_fw, encoder_states_bw is final state
+
     # Decode
-
-
     AttentionMechanism = seq2seq.BahdanauAttention(num_units=num_units,
                                                     memory=tf.reshape(encoder_outputs, \
                                                         [n_batch, input_digits, n_hidden * 2])
@@ -262,7 +262,6 @@ def inference(x, y, n_batch, is_training,
                                                     # tf.reshape(encoder_outputs, n_batch, input_digits, ),
                                                     # memory_sequence_length = input_digits)
                                                     # normalize=True)
-
 
     decoder_1 = rnn_cell.GRUCell(n_hidden, reuse = tf.AUTO_REUSE)
     # decoder_2 = rnn_cell.GRUCell(n_hidden, reuse = tf.AUTO_REUSE)
@@ -375,12 +374,12 @@ def inference(x, y, n_batch, is_training,
 
 def loss(y, t):
     with tf.name_scope('loss'):
-        # mse = tf.reduce_mean(tf.square(y - t), axis = [1, 0])
-        # loss = mse
-        norm = tf.contrib.distributions.Normal(0., 0.5)
-        error = y-t
-        pdf = norm.prob(error)
-        loss = tf.reduce_mean(1 - pdf, [1, 0])
+        mse = tf.reduce_mean(tf.square(y - t), axis = [1, 0])
+        loss = mse
+        # norm = tf.contrib.distributions.Normal(0., 0.5)
+        # error = y-t
+        # pdf = norm.prob(error)
+        # loss = tf.reduce_mean(1 - pdf, [1, 0])
         return loss
 
 def training(loss, learning_rate):
