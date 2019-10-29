@@ -32,7 +32,7 @@ learning_rate = 0.001
 # when attention,learning_rate must be 0.001
 learning_data_day_len = 5
 input_digits = 200
-output_digits = 100
+output_digits = 10
 n_hidden = 1000
 epochs = 100
 eary_stop_epoch = 150
@@ -224,7 +224,11 @@ def inference(x, y, n_batch, is_training,
 
     with tf.variable_scope('encoder'):
         encoder_forward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
+        encoder_forward = rnn_cell.MultiRNNCell(encoder_forward for n in )
+
         encoder_backward = rnn_cell.GRUCell(n_hidden, reuse=tf.AUTO_REUSE)
+        encoder_forward = rnn_cell.MultiRNNCell(encoder_backward for n in )
+
         encoder_outputs = []
         encoder_states = []
 
