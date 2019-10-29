@@ -315,12 +315,12 @@ def inference(x, y, n_batch, is_training,
 
 
             if is_training is True:
-            #     cell_input_bin = elems[tf.cast(samples[0][0], tf.int32)]
-            #     # bool = tf.equal(cell_input_bin, 1)
-            #     t_const = tf.const(t)
-            #     cell_input = tf.case({tf.equal(cell_input_bin, 1): lambda: batch_normalization(output_digits, y)[:, t-1, :],
-            #             tf.equal(t_const, 1): lambda: tf.matmul(decoder_1_outputs[-1], V_hid_1) + c_hid_1},
-            #         default=lambda: output_1)
+                cell_input_bin = elems[tf.cast(samples[0][0], tf.int32)]
+                # bool = tf.equal(cell_input_bin, 1)
+                t_const = tf.const(t)
+                cell_input = tf.case({tf.equal(cell_input_bin, 1): lambda: batch_normalization(output_digits, y)[:, t-1, :],
+                        tf.equal(t_const, 1): lambda: tf.matmul(decoder_1_outputs[-1], V_hid_1) + c_hid_1},
+                    default=lambda: output_1)
                 # cell_input_bin = np.randam.choice([1, 0],p=[tchr_frcng_thr, 1 - tchr_frcng_thr])
                 #
                 # if cell_input_bin==1:
@@ -332,7 +332,7 @@ def inference(x, y, n_batch, is_training,
                 # else:
                 #     cell_input = output_1
 
-                (output_1, state_1) = decoder_1(batch_normalization(output_digits, y)[:, t-1, :], state_1)
+                (output_1, state_1) = decoder_1(cell_input, state_1)
                 # (output_2, state_2) = decoder_2(batch_normalization(output_digits, y)[:, t-1, :], state_2)
             else:
                 # 直前の出力を求める
@@ -369,13 +369,12 @@ def inference(x, y, n_batch, is_training,
 
 def loss(y, t):
     with tf.name_scope('loss'):
-        mse = tf.reduce_mean(tf.square(y - t), axis = [1, 0])
-        loss = mse
-        # norm = tf.contrib.distributions.Normal(0., 0.5)
-        # error = y-t
-        # pdf = norm.prob(error)
-        # loss= tf.reduce_mean(1 - pdf, [1, 0])
-        # mse = tf.reduce_mean(tf.square(y - t), [1, 0])
+        # mse = tf.reduce_mean(tf.square(y - t), axis = [1, 0])
+        # loss = mse
+        norm = tf.contrib.distributions.Normal(0., 0.5)
+        error = y-t
+        pdf = norm.prob(error)
+        loss　= tf.reduce_mean(1 - pdf, [1, 0])
         return loss
 
 def training(loss, learning_rate):
@@ -491,6 +490,7 @@ fc_input_std = fc_input.std(axis=1, keepdims=True)
 fc_output = std_output * fc_input_std + fc_input_mean
 fc_seq = fc_output.reshape(-2)
 print('forecasting', fc_seq)
+
 rnn_np_p_data_sr = np.append(rnn_np_p_data_sr, fc_seq.reshape(-1), axis = 0)
 
 dataframe_2_ = eval_data_set[(learning_data_day_len + k) * output_digits: \
